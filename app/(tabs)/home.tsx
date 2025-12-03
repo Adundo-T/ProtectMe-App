@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ProtectCard } from '@/components/ProtectCard';
 import { SectionHeader } from '@/components/SectionHeader';
 import { StatusPill } from '@/components/StatusPill';
@@ -25,8 +26,15 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>ProtectMe Dashboard</Text>
-          <Text style={styles.subtitle}>Stay safe, even offline.</Text>
+          <View style={styles.headerRow}>
+            <View style={styles.titleRow}>
+              <View style={styles.iconPill}>
+                <MaterialCommunityIcons name="close-circle" size={18} color="#E11D48" />
+              </View>
+              <Text style={styles.title}>ProtectMe</Text>
+            </View>
+            <Text style={styles.subtitle}>Your safety is our priority. We're here to help.</Text>
+          </View>
 
           <View style={styles.grid}>
             <View style={styles.gridItem}>
@@ -115,6 +123,16 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 720,
     alignSelf: 'center',
+    gap: spacing.lg,
+  },
+  headerRow: {
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
   title: {
     fontSize: 28,
@@ -129,6 +147,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.md,
     flexWrap: 'wrap',
+  },
+  iconPill: {
+    width: 30,
+    height: 30,
+    borderRadius: 16,
+    backgroundColor: '#FFE5EA',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   gridItem: {
     flex: 1,

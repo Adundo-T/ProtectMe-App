@@ -6,12 +6,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const tabConfig = [
   { name: 'home', title: 'Home', icon: 'shield-home' },
-  { name: 'sos', title: 'SOS', icon: 'alert-decagram' },
-  { name: 'report-form', title: 'Report', icon: 'file-document-edit' },
-  { name: 'reports', title: 'Reports', icon: 'folder-eye' },
+  // Combined "Report" hub (form + list)
+  { name: 'report-hub', title: 'Report', icon: 'file-document-edit' },
   { name: 'resources', title: 'Resources', icon: 'map-marker-radius' },
-  { name: 'chat', title: 'Chat', icon: 'message-text-lock' },
-  { name: 'settings', title: 'Settings', icon: 'cog' },
+  { name: 'profile', title: 'Profile', icon: 'account-circle-outline' },
 ];
 
 export default function TabsLayout() {
@@ -26,14 +24,30 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: activeColor,
         tabBarInactiveTintColor: inactiveColor,
+        tabBarHideOnKeyboard: true,
         tabBarStyle: {
-          backgroundColor: protectMePalette.background,
+          position: 'absolute',
+          left: 16,
+          right: 16,
+          bottom: insets.bottom + 10,
+          height: 60,
+          borderRadius: 999,
+          backgroundColor: protectMePalette.surface ?? protectMePalette.background,
           borderTopColor: 'transparent',
-          height: 56 + insets.bottom,
-          paddingBottom: Math.max(insets.bottom, 8),
+          paddingBottom: 6,
+          paddingTop: 4,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.08,
+          shadowRadius: 12,
+          elevation: 8,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 2,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10,
+          marginTop: 0,
         },
       }}
     >
