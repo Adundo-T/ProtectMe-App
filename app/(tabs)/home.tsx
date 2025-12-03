@@ -3,6 +3,7 @@ import { Animated, Easing, Image, ScrollView, StyleSheet, Text, View } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { ProtectCard } from '@/components/ProtectCard';
 import { SectionHeader } from '@/components/SectionHeader';
 import { StatusPill } from '@/components/StatusPill';
@@ -54,10 +55,11 @@ export default function HomeScreen() {
   const router = useRouter();
   const {
     reports,
+    resources,
     pendingAlerts,
     syncState,
     loading,
-    actions: { triggerSOS },
+    actions,
   } = useAppContext();
 
   const recentReports = reports.slice(0, 3);
@@ -80,12 +82,50 @@ export default function HomeScreen() {
             <Text style={styles.subtitle}>Your safety is our priority. We're here to help.</Text>
           </View>
 
+          <AnimatedCard delay={40}>
+            <LinearGradient colors={['#FFF5F3', '#FFE6F8']} style={styles.heroCard}>
+              <Button
+                mode="contained"
+                onPress={() => router.push('/(tabs)/sos')}
+                style={styles.heroButton}
+              >
+                Trigger SOS
+              </Button>
+            </LinearGradient>
+          </AnimatedCard>
+
+          <View style={styles.statRow}>
+            {[
+              { label: 'Pending alerts', value: pendingAlerts.length, accent: '#F97373' },
+              { label: 'Reports saved', value: reports.length, accent: '#A855F7' },
+              { label: 'Resources nearby', value: resources.length, accent: '#22C55E' },
+            ].map((stat, index) => (
+              <AnimatedCard key={stat.label} delay={80 + index * 50} style={styles.statCardWrapper}>
+                <LinearGradient
+                  colors={['#FFFFFF', '#F8F2FF']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.statCard}
+                >
+                  <View style={[styles.statAccent, { backgroundColor: stat.accent }]} />
+                  <Text style={styles.statValue}>{stat.value}</Text>
+                  <Text style={styles.statLabel}>{stat.label}</Text>
+                </LinearGradient>
+              </AnimatedCard>
+            ))}
+          </View>
+
           <View style={styles.grid}>
             <AnimatedCard style={styles.gridItem} delay={80}>
               <ProtectCard onPress={() => router.push('/(tabs)/sos')} background="#FDE7FF">
                 <Text style={styles.cardLabel}>Emergency SOS</Text>
                 <Text style={styles.cardTitle}>Hold to alert</Text>
-                <Button mode="contained" onPress={triggerSOS} compact style={styles.cardButton}>
+                <Button
+                  mode="contained"
+                  onPress={() => router.push('/(tabs)/sos')}
+                  compact
+                  style={styles.cardButton}
+                >
                   Trigger SOS
                 </Button>
                 {pendingAlerts.length > 0 ? <StatusPill status="pending-alert" /> : null}
@@ -194,6 +234,64 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     color: protectMePalette.muted,
+  },
+  heroCard: {
+    borderRadius: 28,
+    padding: spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.lg,
+    borderWidth: 1,
+    borderColor: '#FFE1EE',
+  },
+  heroEyebrow: {
+    fontSize: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    color: '#D9466F',
+    fontWeight: '600',
+  },
+  heroTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: protectMePalette.text,
+  },
+  heroBody: {
+    color: protectMePalette.muted,
+  },
+  heroButton: {
+    borderRadius: radii.lg,
+    paddingHorizontal: spacing.lg,
+  },
+  statRow: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    flexWrap: 'wrap',
+  },
+  statCardWrapper: {
+    flex: 1,
+    minWidth: 110,
+  },
+  statCard: {
+    borderRadius: radii.lg,
+    padding: spacing.md,
+    gap: spacing.xs,
+    borderWidth: 1,
+    borderColor: '#E6D7FF',
+  },
+  statAccent: {
+    width: 32,
+    height: 4,
+    borderRadius: 999,
+  },
+  statValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: protectMePalette.text,
+  },
+  statLabel: {
+    color: protectMePalette.muted,
+    fontSize: 13,
   },
   grid: {
     flexDirection: 'row',
