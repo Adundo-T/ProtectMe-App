@@ -15,6 +15,7 @@ export default function RootLayout() {
         <AppProvider>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
+            <Stack.Screen name="auth" />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="onboarding" options={{ presentation: 'modal' }} />
             <Stack.Screen name="report/[id]" />

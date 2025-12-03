@@ -9,14 +9,18 @@ const tabConfig = [
   // Combined "Report" hub (form + list)
   { name: 'report-hub', title: 'Report', icon: 'file-document-edit' },
   { name: 'resources', title: 'Resources', icon: 'map-marker-radius' },
+  { name: 'chat', title: 'Chat', icon: 'message-text-lock' },
   { name: 'profile', title: 'Profile', icon: 'account-circle-outline' },
 ];
+
+const hiddenTabRoutes = ['sos', 'reports', 'settings', 'report-form'];
 
 export default function TabsLayout() {
   const scheme = useColorScheme();
   const activeColor = protectMePalette.primary;
   const inactiveColor = '#8869A3';
   const insets = useSafeAreaInsets();
+  const tabBarBottom = Math.max(insets.bottom, 4);
 
   return (
     <Tabs
@@ -29,7 +33,7 @@ export default function TabsLayout() {
           position: 'absolute',
           left: 16,
           right: 16,
-          bottom: insets.bottom + 10,
+          bottom: tabBarBottom,
           height: 60,
           borderRadius: 999,
           backgroundColor: protectMePalette.surface ?? protectMePalette.background,
@@ -60,6 +64,9 @@ export default function TabsLayout() {
             tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name={tab.icon as any} color={color} size={size} />,
           }}
         />
+      ))}
+      {hiddenTabRoutes.map((route) => (
+        <Tabs.Screen key={route} name={route as any} options={{ href: null }} />
       ))}
     </Tabs>
   );

@@ -1,14 +1,54 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Easing, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ProtectCard } from '@/components/ProtectCard';
 import { SectionHeader } from '@/components/SectionHeader';
 import { StatusPill } from '@/components/StatusPill';
 import { LoadingPlaceholder } from '@/components/LoadingPlaceholder';
 import { useAppContext } from '@/contexts/AppContext';
 import { protectMePalette, radii, spacing } from '@/theme';
+
+type AnimatedCardProps = {
+  delay?: number;
+  children: React.ReactNode;
+  style?: any;
+};
+
+const AnimatedCard: React.FC<AnimatedCardProps> = ({ delay = 0, children, style }) => {
+  const anim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(anim, {
+      toValue: 1,
+      duration: 450,
+      delay,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  }, [anim, delay]);
+
+  const animatedStyle = {
+    opacity: anim,
+    transform: [
+      {
+        translateY: anim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [16, 0],
+        }),
+      },
+      {
+        scale: anim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.96, 1],
+        }),
+      },
+    ],
+  };
+
+  return <Animated.View style={[animatedStyle, style]}>{children}</Animated.View>;
+};
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -29,7 +69,11 @@ export default function HomeScreen() {
           <View style={styles.headerRow}>
             <View style={styles.titleRow}>
               <View style={styles.iconPill}>
-                <MaterialCommunityIcons name="close-circle" size={18} color="#E11D48" />
+                <Image
+                  source={require('@/assets/images/stop-hand.png')}
+                  style={styles.iconImage}
+                  resizeMode="contain"
+                />
               </View>
               <Text style={styles.title}>ProtectMe</Text>
             </View>
@@ -37,7 +81,7 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.grid}>
-            <View style={styles.gridItem}>
+            <AnimatedCard style={styles.gridItem} delay={80}>
               <ProtectCard onPress={() => router.push('/(tabs)/sos')} background="#FDE7FF">
                 <Text style={styles.cardLabel}>Emergency SOS</Text>
                 <Text style={styles.cardTitle}>Hold to alert</Text>
@@ -46,9 +90,9 @@ export default function HomeScreen() {
                 </Button>
                 {pendingAlerts.length > 0 ? <StatusPill status="pending-alert" /> : null}
               </ProtectCard>
-            </View>
+            </AnimatedCard>
 
-            <View style={styles.gridItem}>
+            <AnimatedCard style={styles.gridItem} delay={140}>
               <ProtectCard onPress={() => router.push('/(tabs)/report-form')} background="#EAF2FF">
                 <Text style={styles.cardLabel}>File a report</Text>
                 <Text style={styles.cardTitle}>1 tap to start</Text>
@@ -56,7 +100,7 @@ export default function HomeScreen() {
                   New report
                 </Button>
               </ProtectCard>
-            </View>
+            </AnimatedCard>
           </View>
 
           <SectionHeader
@@ -71,36 +115,44 @@ export default function HomeScreen() {
           {loading ? (
             <LoadingPlaceholder />
           ) : recentReports.length === 0 ? (
-            <ProtectCard>
-              <Text style={styles.cardBody}>No reports yet. Draft or sync them anytime.</Text>
-            </ProtectCard>
+            <AnimatedCard delay={200}>
+              <ProtectCard>
+                <Text style={styles.cardBody}>No reports yet. Draft or sync them anytime.</Text>
+              </ProtectCard>
+            </AnimatedCard>
           ) : (
-            recentReports.map((report) => (
-              <ProtectCard key={report.id} onPress={() => router.push(`/report/${report.id}`)}>
-                <View style={styles.reportRow}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.reportTitle}>{report.title}</Text>
-                    <Text style={styles.reportTime}>
-                      {new Date(report.updatedAt).toLocaleDateString()} •{' '}
-                      {report.isAnonymous ? 'Anonymous' : 'Identified'}
-                    </Text>
+            recentReports.map((report, index) => (
+              <AnimatedCard key={report.id} delay={200 + index * 80}>
+                <ProtectCard onPress={() => router.push(`/report/${report.id}`)}>
+                  <View style={styles.reportRow}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.reportTitle}>{report.title}</Text>
+                      <Text style={styles.reportTime}>
+                        {new Date(report.updatedAt).toLocaleDateString()} •{' '}
+                        {report.isAnonymous ? 'Anonymous' : 'Identified'}
+                      </Text>
                   </View>
                   <StatusPill status={report.status} />
                 </View>
               </ProtectCard>
+            </AnimatedCard>
             ))
           )}
 
           <SectionHeader title="Resources nearby" subtitle="Safe houses & services stored offline" />
-          <ProtectCard onPress={() => router.push('/(tabs)/resources')} background="#FFFDF5">
-            <Text style={styles.cardTitle}>Browse verified safe spots</Text>
-            <Text style={styles.cardBody}>Tap to open map locations, call hotlines, or cache directions.</Text>
-          </ProtectCard>
+          <AnimatedCard delay={260}>
+            <ProtectCard onPress={() => router.push('/(tabs)/resources')} background="#FFFDF5">
+              <Text style={styles.cardTitle}>Browse verified safe spots</Text>
+              <Text style={styles.cardBody}>Tap to open map locations, call hotlines, or cache directions.</Text>
+            </ProtectCard>
+          </AnimatedCard>
 
           <SectionHeader title="Chat (coming soon)" subtitle="Secure messaging placeholder" />
-          <ProtectCard onPress={() => router.push('/(tabs)/chat')}>
-            <Text style={styles.cardBody}>Connect with live advocates once the secure channel is enabled.</Text>
-          </ProtectCard>
+          <AnimatedCard delay={320}>
+            <ProtectCard onPress={() => router.push('/(tabs)/chat')}>
+              <Text style={styles.cardBody}>Connect with live advocates once the secure channel is enabled.</Text>
+            </ProtectCard>
+          </AnimatedCard>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -149,12 +201,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   iconPill: {
-    width: 30,
-    height: 30,
-    borderRadius: 16,
+    width: 32,
+    height: 32,
+    borderRadius: 18,
     backgroundColor: '#FFE5EA',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  iconImage: {
+    width: 22,
+    height: 22,
   },
   gridItem: {
     flex: 1,

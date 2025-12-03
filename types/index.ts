@@ -46,5 +46,6 @@ export type AppState = {
   pinEnabled: boolean;
   biometricEnabled: boolean;
   loading: boolean;
+  isAuthenticated: boolean;
 };
 

@@ -4,7 +4,7 @@ import { useAppContext } from '@/contexts/AppContext';
 import { protectMePalette } from '@/theme';
 
 export default function IndexRedirect() {
-  const { loading, hasCompletedOnboarding } = useAppContext();
+  const { loading, hasCompletedOnboarding, isAuthenticated } = useAppContext();
 
   if (loading) {
     return (
@@ -12,6 +12,10 @@ export default function IndexRedirect() {
         <ActivityIndicator size="large" color={protectMePalette.primary} />
       </View>
     );
+  }
+
+  if (!isAuthenticated) {
+    return <Redirect href="/auth" />;
   }
 
   if (!hasCompletedOnboarding) {

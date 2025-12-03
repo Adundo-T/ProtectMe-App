@@ -27,6 +27,7 @@ type AppContextValue = AppState & {
     togglePinLock: () => Promise<void>;
     toggleBiometric: () => Promise<void>;
     loadReportForEdit: (id: number) => Promise<Report | undefined>;
+    signIn: () => Promise<void>;
   };
 };
 
@@ -34,6 +35,7 @@ const STORAGE_KEYS = {
   onboarding: '@protectme/onboarding-complete',
   pinEnabled: '@protectme/pin-enabled',
   biometricEnabled: '@protectme/biometric-enabled',
+  authenticated: '@protectme/authenticated',
 };
 
 const SOS_NUMBER = '112';
@@ -47,6 +49,7 @@ const initialState: AppState = {
   pinEnabled: false,
   biometricEnabled: false,
   loading: true,
+  isAuthenticated: false,
 };
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);
@@ -58,10 +61,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     (async () => {
       await initializeDatabase();
       const [reports, resources, pendingAlerts] = await Promise.all([getReports(), getResources(), getPendingAlerts()]);
-      const [[, onboardingValue], [, pinValue], [, biometricValue]] = await AsyncStorage.multiGet([
+      const [[, onboardingValue], [, pinValue], [, biometricValue], [, authenticatedValue]] = await AsyncStorage.multiGet([
         STORAGE_KEYS.onboarding,
         STORAGE_KEYS.pinEnabled,
         STORAGE_KEYS.biometricEnabled,
+        STORAGE_KEYS.authenticated,
       ]);
 
       setState((prev) => ({
@@ -72,6 +76,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         hasCompletedOnboarding: onboardingValue === 'true',
         pinEnabled: pinValue === 'true',
         biometricEnabled: biometricValue === 'true',
+        isAuthenticated: authenticatedValue === 'true',
         loading: false,
       }));
     })();
@@ -176,6 +181,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     loadReportForEdit: async (id: number) => {
       const report = await getReportById(id);
       return report;
+    },
+    signIn: async () => {
+      await AsyncStorage.setItem(STORAGE_KEYS.authenticated, 'true');
+      setState((prev) => ({ ...prev, isAuthenticated: true }));
     },
   };
 
