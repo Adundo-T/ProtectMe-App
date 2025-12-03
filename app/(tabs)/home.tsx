@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
 import { ProtectCard } from '@/components/ProtectCard';
 import { SectionHeader } from '@/components/SectionHeader';
 import { StatusPill } from '@/components/StatusPill';
@@ -83,13 +84,15 @@ export default function HomeScreen() {
           </View>
 
           <AnimatedCard delay={40}>
-            <LinearGradient colors={['#FFF5F3', '#FFE6F8']} style={styles.heroCard}>
+            <LinearGradient colors={['#FFFFFF', '#FFFFFF']} style={styles.heroCard}>
               <Button
                 mode="contained"
+                buttonColor="#FF0000"
+                textColor="#FFFFFF"
                 onPress={() => router.push('/(tabs)/sos')}
                 style={styles.heroButton}
               >
-                Trigger SOS
+                Emergency SOS
               </Button>
             </LinearGradient>
           </AnimatedCard>
@@ -116,26 +119,15 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.grid}>
-            <AnimatedCard style={styles.gridItem} delay={80}>
-              <ProtectCard onPress={() => router.push('/(tabs)/sos')} background="#FDE7FF">
-                <Text style={styles.cardLabel}>Emergency SOS</Text>
-                <Text style={styles.cardTitle}>Hold to alert</Text>
-                <Button
-                  mode="contained"
-                  onPress={() => router.push('/(tabs)/sos')}
-                  compact
-                  style={styles.cardButton}
-                >
-                  Trigger SOS
-                </Button>
-                {pendingAlerts.length > 0 ? <StatusPill status="pending-alert" /> : null}
-              </ProtectCard>
-            </AnimatedCard>
-
             <AnimatedCard style={styles.gridItem} delay={140}>
               <ProtectCard onPress={() => router.push('/(tabs)/report-form')} background="#EAF2FF">
-                <Text style={styles.cardLabel}>File a report</Text>
-                <Text style={styles.cardTitle}>1 tap to start</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+                  <MaterialIcons name="description" size={24} color={protectMePalette.primary} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.cardLabel}>File a report</Text>
+                    <Text style={styles.cardTitle}>1 tap to start</Text>
+                  </View>
+                </View>
                 <Button mode="text" textColor={protectMePalette.primary}>
                   New report
                 </Button>
@@ -146,6 +138,7 @@ export default function HomeScreen() {
           <SectionHeader
             title="Recent reports"
             subtitle={`${reports.length} total • ${syncState === 'syncing' ? 'Syncing…' : 'Offline-ready'}`}
+            icon={<MaterialIcons name="history" size={20} color="#A855F7" />}
             action={
               <Button compact mode="text" onPress={() => router.push('/(tabs)/reports')}>
                 View all
@@ -179,7 +172,7 @@ export default function HomeScreen() {
             ))
           )}
 
-          <SectionHeader title="Resources nearby" subtitle="Safe houses & services stored offline" />
+          <SectionHeader title="Resources nearby" subtitle="Safe houses & services stored offline" icon={<MaterialIcons name="location-on" size={20} color="#22C55E" />} />
           <AnimatedCard delay={260}>
             <ProtectCard onPress={() => router.push('/(tabs)/resources')} background="#FFFDF5">
               <Text style={styles.cardTitle}>Browse verified safe spots</Text>
@@ -187,7 +180,7 @@ export default function HomeScreen() {
             </ProtectCard>
           </AnimatedCard>
 
-          <SectionHeader title="Chat (coming soon)" subtitle="Secure messaging placeholder" />
+          <SectionHeader title="Chat (coming soon)" subtitle="Secure messaging placeholder" icon={<MaterialIcons name="chat" size={20} color="#F97373" />} />
           <AnimatedCard delay={320}>
             <ProtectCard onPress={() => router.push('/(tabs)/chat')}>
               <Text style={styles.cardBody}>Connect with live advocates once the secure channel is enabled.</Text>
@@ -220,6 +213,11 @@ const styles = StyleSheet.create({
   headerRow: {
     gap: spacing.xs,
     marginBottom: spacing.sm,
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radii.lg,
   },
   titleRow: {
     flexDirection: 'row',
@@ -228,7 +226,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: '900',
     color: protectMePalette.text,
   },
   subtitle: {
@@ -240,9 +238,10 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: spacing.lg,
     borderWidth: 1,
-    borderColor: '#FFE1EE',
+    borderColor: '#FFFFFF',
   },
   heroEyebrow: {
     fontSize: 12,
@@ -302,13 +301,14 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 18,
-    backgroundColor: '#FFE5EA',
+    backgroundColor: '#FF0000',
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconImage: {
     width: 22,
     height: 22,
+    tintColor: '#FFFFFF',
   },
   gridItem: {
     flex: 1,
@@ -348,6 +348,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: protectMePalette.muted,
     marginTop: 4,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#E0E0E0',
+    marginVertical: spacing.xs,
   },
 });
 

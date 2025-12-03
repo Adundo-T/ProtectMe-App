@@ -6,12 +6,14 @@ type Props = {
   title: string;
   action?: ReactNode;
   subtitle?: string;
+  icon?: ReactNode;
 };
 
-export function SectionHeader({ title, subtitle, action }: Props) {
+export function SectionHeader({ title, subtitle, action, icon }: Props) {
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }}>
+      {icon}
+      <View style={{ flex: 1, marginLeft: icon ? spacing.sm : 0 }}>
         <Text style={styles.title}>{title}</Text>
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
