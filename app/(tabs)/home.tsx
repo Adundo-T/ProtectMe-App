@@ -60,7 +60,6 @@ export default function HomeScreen() {
     pendingAlerts,
     syncState,
     loading,
-    actions,
   } = useAppContext();
 
   const recentReports = reports.slice(0, 3);

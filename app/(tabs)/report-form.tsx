@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } fr
 import { Button, Switch, TextInput } from 'react-native-paper';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useAppContext } from '@/contexts/AppContext';
-import { protectMePalette, radii, spacing } from '@/theme';
+import { protectMePalette, spacing } from '@/theme';
 import { ProtectCard } from '@/components/ProtectCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

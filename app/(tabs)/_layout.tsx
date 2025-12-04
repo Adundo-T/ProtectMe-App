@@ -1,5 +1,4 @@
 import { Tabs } from 'expo-router';
-import { useColorScheme } from 'react-native';
 import { protectMePalette } from '@/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,7 +15,6 @@ const tabConfig = [
 const hiddenTabRoutes = ['sos', 'reports', 'settings', 'report-form'];
 
 export default function TabsLayout() {
-  const scheme = useColorScheme();
   const activeColor = protectMePalette.primary;
   const inactiveColor = '#8869A3';
   const insets = useSafeAreaInsets();
@@ -36,7 +34,7 @@ export default function TabsLayout() {
           bottom: tabBarBottom,
           height: 60,
           borderRadius: 999,
-          backgroundColor: protectMePalette.surface ?? protectMePalette.background,
+          backgroundColor: protectMePalette.card,
           borderTopColor: 'transparent',
           paddingBottom: 6,
           paddingTop: 4,

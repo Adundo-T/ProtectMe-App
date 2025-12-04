@@ -20,7 +20,7 @@ export type Report = {
 export type Resource = {
   id: number;
   name: string;
-  category: 'Safe House' | 'Medical' | 'Legal' | 'Helpline';
+  category: 'Safe House' | 'Medical' | 'Legal' | 'Helpline' | 'Medical / GBV Centre' | 'Police';
   phone: string;
   address: string;
   latitude?: number;
