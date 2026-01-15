@@ -83,7 +83,7 @@ export default function AuthScreen() {
             </Pressable>
 
             <Text style={styles.footerText}>
-              Don't have an account? <Text style={styles.footerLink}>Sign up</Text>
+              Don&#39;t have an account? <Text style={styles.footerLink}>Sign up</Text>
             </Text>
           </View>
         </View>

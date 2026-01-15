@@ -3,7 +3,7 @@ import { protectMePalette, radii, spacing } from '@/theme';
 import type { ReportStatus } from '@/types';
 
 type Props = {
-  status: ReportStatus | 'pending-alert';
+  status: ReportStatus | 'pending-alert' | 'active';
 };
 
 const statusMap: Record<Props['status'], { label: string; color: string; background: string }> = {
@@ -21,6 +21,11 @@ const statusMap: Record<Props['status'], { label: string; color: string; backgro
     label: 'Synced',
     color: protectMePalette.success,
     background: '#DCF7EA',
+  },
+  active: {
+    label: 'Active',
+    color: protectMePalette.primary,
+    background: '#E3F2FD',
   },
   'pending-alert': {
     label: 'SOS Pending',

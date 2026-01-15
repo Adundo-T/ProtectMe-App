@@ -15,13 +15,13 @@ import {
   updateReportStatus,
   updateAlertStatus,
 } from '@/services/database';
-import { ApiService } from '@/services/api';
+import { ApiService } from '../services/api';
 import type { AppState, ReportStatus, Report } from '@/types';
 
 type AppContextValue = AppState & {
   actions: {
-    createReport: (payload: { title: string; description: string; isAnonymous: boolean }) => Promise<void>;
-    saveDraft: (payload: { id?: number; title: string; description: string; isAnonymous: boolean }) => Promise<void>;
+    createReport: (payload: { title: string; description: string; isAnonymous: boolean; mediaAttachments?: any[] }) => Promise<void>;
+    saveDraft: (payload: { id?: number; title: string; description: string; isAnonymous: boolean; mediaAttachments?: any[] }) => Promise<void>;
     deleteReport: (id: number) => Promise<void>;
     markSynced: (id: number) => Promise<void>;
     triggerSOS: () => Promise<void>;
@@ -106,7 +106,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const createOrUpdateReport = async (
-    payload: { id?: number; title: string; description: string; isAnonymous: boolean },
+    payload: { id?: number; title: string; description: string; isAnonymous: boolean; mediaAttachments?: any[] },
     status: ReportStatus,
   ) => {
     await saveReport({
@@ -116,16 +116,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
       status,
       isAnonymous: payload.isAnonymous,
     });
-    Analytics.trackReportCreated(payload.isAnonymous, false); // TODO: Add attachment tracking
+    const hasAttachments = Boolean(payload.mediaAttachments && payload.mediaAttachments.length > 0);
+    Analytics.trackReportCreated(payload.isAnonymous, hasAttachments);
     await refreshReports();
   };
 
   const actions: AppContextValue['actions'] = {
-    createReport: async ({ title, description, isAnonymous }) => {
-      await createOrUpdateReport({ title, description, isAnonymous }, 'pending');
+    createReport: async ({ title, description, isAnonymous, mediaAttachments }) => {
+      // Input validation
+      if (!title || title.trim().length === 0) {
+        throw new Error('Report title is required');
+      }
+      if (!description || description.trim().length === 0) {
+        throw new Error('Report description is required');
+      }
+      if (title.length > 200) {
+        throw new Error('Report title must be 200 characters or less');
+      }
+      if (description.length > 2000) {
+        throw new Error('Report description must be 2000 characters or less');
+      }
+      await createOrUpdateReport({ title: title.trim(), description: description.trim(), isAnonymous, mediaAttachments }, 'pending');
     },
-    saveDraft: async ({ id, title, description, isAnonymous }) => {
-      await createOrUpdateReport({ id, title, description, isAnonymous }, 'draft');
+    saveDraft: async ({ id, title, description, isAnonymous, mediaAttachments }) => {
+      await createOrUpdateReport({ id, title, description, isAnonymous, mediaAttachments }, 'draft');
     },
     deleteReport: async (id: number) => {
       await deleteReportFromDb(id);

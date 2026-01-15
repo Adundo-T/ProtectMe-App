@@ -1,0 +1,9 @@
+{"environment":"development","level":"info","message":"Backend server running on port 3000","port":3000,"service":"protectme-backend","timestamp":"2025-12-04T11:30:11.545Z","version":"1.0.0"}
+{"level":"info","message":"::1 - - [04/Dec/2025:11:35:29 +0000] \"GET /metrics HTTP/1.1\" 200 - \"-\" \"curl/8.16.0\"","service":"protectme-backend","timestamp":"2025-12-04T11:35:29.888Z"}
+{"level":"info","message":"Syncing report","reportId":1,"service":"protectme-backend","timestamp":"2025-12-04T11:36:01.591Z"}
+{"level":"info","message":"Sync operation: report - success","service":"protectme-backend","timestamp":"2025-12-04T11:36:01.593Z"}
+{"level":"info","message":"Report synced successfully","reportId":1,"service":"protectme-backend","timestamp":"2025-12-04T11:36:01.594Z"}
+{"level":"info","message":"POST /reports/sync 200 8ms","meta":{"req":{"headers":{"accept":"*/*","content-length":"172","content-type":"application/json","host":"localhost:3000","user-agent":"curl/8.16.0"},"httpVersion":"1.1","method":"POST","originalUrl":"/reports/sync","query":{},"url":"/reports/sync"},"res":{"statusCode":200},"responseTime":8},"service":"protectme-backend","timestamp":"2025-12-04T11:36:01.607Z"}
+{"level":"info","message":"::1 - - [04/Dec/2025:11:36:01 +0000] \"POST /reports/sync HTTP/1.1\" 200 22 \"-\" \"curl/8.16.0\"","service":"protectme-backend","timestamp":"2025-12-04T11:36:01.610Z"}
+{"level":"info","message":"::1 - - [04/Dec/2025:11:36:17 +0000] \"GET /metrics HTTP/1.1\" 200 - \"-\" \"curl/8.16.0\"","service":"protectme-backend","timestamp":"2025-12-04T11:36:17.775Z"}
+{"environment":"development","level":"info","message":"Backend server running on port 3000","port":3000,"service":"protectme-backend","timestamp":"2025-12-04T12:24:58.235Z","version":"1.0.0"}

@@ -45,13 +45,62 @@ ProtectMe is a survivor-first GBV safety companion built with Expo Router, React
 - All reports/resources/pending alerts live in `protectme.db` via SQLite.
 - Draft vs pending vs synced statuses shown throughout the UI, with manual sync converting pending items to synced after a faux delay.
 - SOS button logs a pending alert entry in the local DB for auditing even without network.
-- Manual “Sync now” button is located in Settings; when backend endpoints are ready, wire them inside `actions.syncNow`.
+- Manual "Sync now" button is located in Settings; backend integration is now complete with real API endpoints.
 
-### Where to add backend integrations later
+### Backend Integration
 
-- `contexts/AppContext.tsx`: replace the mock sync delay with real API calls (`actions.syncNow`) and wire SOS/report submission once endpoints exist.
-- `services/database.ts`: extend the schema or migrations as new offline entities are required.
-- `app/(tabs)/chat.tsx`: swap the placeholder list for WebSocket-powered messaging when the secure server is provided.
+✅ **Complete**: Backend API endpoints are now deployed and integrated.
+
+- `contexts/AppContext.tsx`: `syncNow` function calls real API endpoints for reports, alerts, and resources
+- `services/api.ts`: HTTP client with retry logic and network utilities
+- `backend/`: Node.js/Express server with Docker support
+- Real-time sync between mobile app and backend services
+
+### Monitoring & Analytics
+
+Comprehensive monitoring and analytics setup for production observability:
+
+#### **Backend Monitoring**
+- **Error Tracking**: Sentry integration with performance profiling
+- **Logging**: Winston structured logging with file and console outputs
+- **Metrics**: Prometheus metrics for HTTP requests, sync operations, and system health
+- **Health Checks**: `/health` endpoint with system metrics
+
+#### **Frontend Analytics**
+- **User Analytics**: Firebase Analytics for user behavior tracking
+- **Performance Monitoring**: Firebase Performance for app speed metrics
+- **Error Tracking**: Sentry for crash reporting and error boundaries
+- **Custom Events**: Report creation, SOS activation, sync operations
+
+#### **Tracked Events**
+- App lifecycle (open, background)
+- User actions (report creation, SOS alerts, settings changes)
+- Sync operations (success/failure, duration, item counts)
+- API calls (endpoints, response times, success rates)
+- Error occurrences with context
+
+#### **Configuration**
+Environment variables required:
+```bash
+# Frontend
+EXPO_PUBLIC_SENTRY_DSN=your-sentry-dsn
+EXPO_PUBLIC_FIREBASE_*=your-firebase-config
+
+# Backend
+SENTRY_DSN=your-sentry-dsn
+LOG_LEVEL=info
+```
+
+### CI/CD Pipeline
+
+Automated build and deployment pipeline using GitHub Actions:
+
+- **Backend**: Docker container build, testing, and deployment to container registry
+- **Frontend**: Web build, Android APK generation, and deployment to GitHub Pages
+- **Dependencies**: Automated security updates via Dependabot
+- **Testing**: TypeScript checking, linting, and security audits on every PR
+
+See `.github/README.md` for detailed CI/CD setup instructions.
 
 ### Naming & assets
 

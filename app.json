@@ -11,11 +11,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "web": {
-      "bundler": "metro",
-      "output": "single",
-      "favicon": "./assets/images/favicon.png"
-    },
+    "android": {},
     "plugins": ["expo-router", "expo-font", "expo-web-browser"]
   }
 }

@@ -12,6 +12,7 @@ type DbReportRow = {
   hasAttachment: number;
   photoUri: string | null;
   audioUri: string | null;
+  mediaAttachments: string | null;
 };
 
 type DbResourceRow = {
@@ -154,13 +155,14 @@ export async function saveReport(payload: {
   status: ReportStatus;
   isAnonymous: boolean;
   attachments?: { photoUri?: string; audioUri?: string };
+  mediaAttachments?: any[];
 }) {
   const db = await dbPromise;
   const timestamp = new Date().toISOString();
   if (payload.id) {
     await db.runAsync(
       `UPDATE reports
-       SET title = ?, description = ?, status = ?, updatedAt = ?, isAnonymous = ?, hasAttachment = ?, photoUri = ?, audioUri = ?
+       SET title = ?, description = ?, status = ?, updatedAt = ?, isAnonymous = ?, hasAttachment = ?, photoUri = ?, audioUri = ?, mediaAttachments = ?
        WHERE id = ?`,
       [
         payload.title,
@@ -171,6 +173,7 @@ export async function saveReport(payload: {
         payload.attachments ? 1 : 0,
         payload.attachments?.photoUri ?? null,
         payload.attachments?.audioUri ?? null,
+        payload.mediaAttachments ? JSON.stringify(payload.mediaAttachments) : null,
         payload.id,
       ],
     );
@@ -178,8 +181,8 @@ export async function saveReport(payload: {
   }
 
   const result = await db.runAsync(
-    `INSERT INTO reports (title, description, status, createdAt, updatedAt, isAnonymous, hasAttachment, photoUri, audioUri)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO reports (title, description, status, createdAt, updatedAt, isAnonymous, hasAttachment, photoUri, audioUri, mediaAttachments)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       payload.title,
       payload.description,
@@ -190,6 +193,7 @@ export async function saveReport(payload: {
       payload.attachments ? 1 : 0,
       payload.attachments?.photoUri ?? null,
       payload.attachments?.audioUri ?? null,
+        payload.mediaAttachments ? JSON.stringify(payload.mediaAttachments) : null,
     ],
   );
 
@@ -255,3 +259,7 @@ function mapDbReport(row: DbReportRow): Report {
   };
 }
 
+export async function updateAlertStatus(id: number, status: 'pending' | 'resolved') {
+  const db = await dbPromise;
+  await db.runAsync('UPDATE pending_alerts SET status = ? WHERE id = ?', [status, id]);
+}

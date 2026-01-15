@@ -1,0 +1,64 @@
+name: Full Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-test:
+    uses: ./.github/workflows/backend-deploy.yml
+
+  frontend-test:
+    uses: ./.github/workflows/frontend-build.yml
+
+  deploy-backend:
+    needs: [backend-test, frontend-test]
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Deploy Backend
+      run: |
+        echo "Deploying backend to production environment"
+        # Add your backend deployment commands here
+        # Examples:
+        # - Docker build and push
+        # - Kubernetes deployment
+        # - Serverless framework deploy
+        # - SSH to server and deploy
+
+  deploy-frontend:
+    needs: [backend-test, frontend-test]
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Deploy Frontend
+      run: |
+        echo "Deploying frontend to production environment"
+        # Add your frontend deployment commands here
+        # Examples:
+        # - Expo Application Services (EAS) build and submit
+        # - Fastlane for app store deployments
+        # - CDN deployment for web builds
+
+  notify:
+    needs: [deploy-backend, deploy-frontend]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+    - name: Notify deployment status
+      run: |
+        if [ ${{ needs.deploy-backend.result }} == 'success' ] && [ ${{ needs.deploy-frontend.result }} == 'success' ]; then
+          echo "✅ All deployments successful"
+          # Send success notification (Slack, Discord, etc.)
+        else
+          echo "❌ Some deployments failed"
+          # Send failure notification
+        fi

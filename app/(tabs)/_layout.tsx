@@ -8,7 +8,7 @@ const tabConfig = [
   // Combined "Report" hub (form + list)
   { name: 'report-hub', title: 'Report', icon: 'file-document-edit' },
   { name: 'resources', title: 'Resources', icon: 'map-marker-radius' },
-  { name: 'chat', title: 'Chat', icon: 'message-text-lock' },
+  { name: 'chat', title: 'Chat', icon: 'message-text' },
   { name: 'profile', title: 'Profile', icon: 'account-circle-outline' },
 ];
 

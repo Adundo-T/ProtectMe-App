@@ -79,7 +79,7 @@ export default function HomeScreen() {
               </View>
               <Text style={styles.title}>ProtectMe</Text>
             </View>
-            <Text style={styles.subtitle}>Your safety is our priority. We're here to help.</Text>
+            <Text style={styles.subtitle}>Your safety is our priority. We&#39;re here to help.</Text>
           </View>
 
           <AnimatedCard delay={40}>
